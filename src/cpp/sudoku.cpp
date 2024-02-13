@@ -141,36 +141,33 @@ void printboard(Board const& oldboard, Board const& board, Notes const& note) {
 
 Board importBoard(std::string path, Board board) {
     std::ifstream input (path);
-    if (input.is_open()) {
-        //check if input.txt has a valid board(just 9x9 field)
-        std::string line;
-        int field[9][9] {0};
-        int linenumber {0};
-        int numperrow;
-        while(getline(input,line)) {
-            if (!line.empty()&&line[0]!='#'){
-                int numperline = 0;
-                for (int i = 0;i<=line.length();++i) {
-                    if( line[i] >= '0' && line[i] <= '9' ) {
-                        field[numperline][numperrow] = line[i] - '0';
-                        ++numperline;
-                    }
-                }
-                if (numperline == 9) {++numperrow;}
-                else if (numperline != 0) {
-                    input.close();
-                    return board;
-                }
+    if (!input.is_open()) {
+        std::cout << "Can\'t open file\n";
+        throw std::runtime_error{"this should not happen"};
+    }
+    //check if input.txt has a valid board(just 9x9 field)
+    std::string line;
+    Board newBoard;
+    int numperrow {0};
+    while(getline(input,line)) {
+        if (line.empty() || line[0]!='#') continue;
+        int numperline = 0;
+        for (size_t i = 0;i<line.length();++i) {
+            if( line[i] >= '0' && line[i] <= '9' ) {
+                newBoard(numperline, numperrow) = line[i] - '0';
+                ++numperline;
             }
         }
-        input.close();
-        if (numperrow != 9) {return board;}
-        //Board übertragen
-        for(int i=0;i<81;++i) {board(i%9,i/9)=field[i%9][i/9];}
-    } else {
-        std::cout << "Can\'t open file\n";
+        if (numperline == 9) {++numperrow;}
+        else if (numperline != 0) {
+            throw std::runtime_error{"this should not happen"};
+        }
     }
-    return board;
+    input.close();
+    if (numperrow != 9) {return board;}
+    //Board übertragen
+    //for(int i=0;i<81;++i) {board(i%9,i/9)=field[i%9][i/9];}
+    return newBoard;
 }
 
 void exportBoard(std::string path, Board& board) {
@@ -263,7 +260,6 @@ bool finalBoard(Board const& board) {
 }
 
 bool validBoard(Board const& board) {
-	Notes const& note = generateNotes(board);
 	Tmp tmp {};
 	for (int a=0;a<9;++a) {
 		for (int b=0;b<9;++b) {
@@ -346,7 +342,6 @@ Board smartSolving(Board const& realBoard) {
 Board smartbruteforce(Board const& RealBoard) {
 	Board board;
 	//std::cout<<"\nStarting smart Bruteforcing!\n";
-	bool progress=true;
 	Notes notes=generateNotes(RealBoard);
 	for (int y=0;y<9;++y) {
 		for (int x=0;x<9;++x) {
@@ -372,7 +367,6 @@ Board smartbruteforce(Board const& RealBoard) {
 Board dumpbruteforce(Board const& RealBoard) {
 	Board board;
 	//std::cout<<"\nStarting Bruteforcing!\n";
-	bool progress=true;
 	Notes notes=generateNotes(RealBoard);
 	for (int y=0;y<9;++y) {
 		for (int x=0;x<9;++x) {
