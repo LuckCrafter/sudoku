@@ -2,7 +2,7 @@
 #include <cstddef>
 
 struct Board {
-    int field[9][9] {0};
+    private int field[9][9] {0};
 	/*int feld[9][9] = {
 	{6,0,0, 0,0,0, 0,0,4},
 	{0,0,9, 0,8,0, 2,0,1},
@@ -20,7 +20,7 @@ struct Board {
 	int& operator()(size_t y, size_t x) { return field[y][x]; }
 	int operator()(size_t y, size_t x) const { return field[y][x]; }
 
-	bool notes[9][9][9] {false};
+  	private bool notes[9][9][9] {false};
 	bool& note(size_t b, size_t y, size_t x) {return notes[b][y][x];}
 	bool note(size_t b, size_t y, size_t x) const {return notes[b][y][x];}
 	void genNotes() {
