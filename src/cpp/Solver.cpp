@@ -1,14 +1,14 @@
 #include "Solver.h"
 
 //needed check funcs
-bool finalBoard(Board const board) {
+bool finalBoard(Board const& board) {
 	for (int i=0;i<81;++i) {
 		if (board(i/9,i%9)==0) return false;
 	}
 	return true;
 }
 
-bool validBoard(Board const board) {
+bool validBoard(Board const& board) {
 	IntArray tmp {};
 	for (int a=0;a<9;++a) {
 		for (int b=0;b<9;++b) {
@@ -53,7 +53,7 @@ Board generateNotes(Board board) {
 	return board;
 }
 */
-IntArray schritt2(Board const board) {
+IntArray schritt2(Board const& board) {
 	// Schritt 2: Prüfen ob es felder gibt die keine alternativen zahlen haben
 	IntArray tmp{};
 	for (int b=0;b<9;b++) {
@@ -73,7 +73,7 @@ IntArray schritt2(Board const board) {
 
 
 
-Board schritt3(IntArray const tmp, Board board) {
+Board schritt3(IntArray const tmp, Board& board) {
 	// Schritt 3: Alternativlose Felder mit Nummer setzen (zurück zu schritt 1)
 	for (int a=0;a<9;a++) {
 		for (int b=0;b<9;b++) {
@@ -106,7 +106,7 @@ Board schritt3(IntArray const tmp, Board board) {
 }
 
 
-Board smartSolving(Board const realBoard) {
+Board smartSolving(Board const& realBoard) {
 	Board board = realBoard;
 	bool valid=true, progress=true;
 	while (valid && progress) {
@@ -115,32 +115,33 @@ Board smartSolving(Board const realBoard) {
 		//board = generateNotes(board);
 		board.genNotes();
 		IntArray tmp = schritt2(board);
-		auto newBoard = schritt3(tmp, board);
-//		printboard(board, newBoard, note);
+		Board newBoard = schritt3(tmp, board);
+		printnote(newBoard, board);
+        std::cout << "\n\n";
 		for (int i=0;i<81;++i) {
-			if (board(i/9,i%9)!=newBoard(i/9,i%9)) {
-				progress=true;
-			}
+			if (board(i/9,i%9)!=newBoard(i/9,i%9)) {progress=true;}
 		}
 		board = newBoard;
 		valid=validBoard(board);
+        std::cout << valid;
 	}
 	if (valid) return board;
 	return realBoard;
 }
 
-Board smartbruteforce(Board const RealBoard) {
-	Board board = RealBoard;
+Board smartbruteforce(Board const& realBoard) {
+	Board board = realBoard;
 	//std::cout<<"\nStarting smart Bruteforcing!\n";
 	//board = generateNotes(RealBoard);
 	board.genNotes();
+    std::cout << "Hey\n";
 	for (int y=0;y<9;++y) {
 		for (int x=0;x<9;++x) {
-			if (RealBoard(y,x)==0) {
+			if (board(y,x)==0) {
 				for (int b=0;b<9;++b) {
 					if(!board.note(b,y,x)) {
 //						getchar();
-						board=RealBoard;
+						board=realBoard;
 						board(y,x)=b+1;
 //						printboard(RealBoard,board);
 						board = smartSolving(board);
@@ -148,25 +149,26 @@ Board smartbruteforce(Board const RealBoard) {
 						if (finalBoard(board)) return board;
 					}
 				}
-				return RealBoard;
+				return realBoard;
 			}
 		}
 	}
-	return RealBoard;
+    Board newBoard;
+	return newBoard;
 }
 
-Board dumpbruteforce(Board const RealBoard) {
-	Board board = RealBoard;
+Board dumpbruteforce(Board const& realBoard) {
+	Board board = realBoard;
 	//std::cout<<"\nStarting Bruteforcing!\n";
 	//board = generateNotes(RealBoard);
 	board.genNotes();
 	for (int y=0;y<9;++y) {
 		for (int x=0;x<9;++x) {
-			if (RealBoard(y,x)==0) {
+			if (realBoard(y,x)==0) {
 				for (int b=0;b<9;++b) {
 					if(!board.note(b,y,x)) {
 //						getchar();
-						board=RealBoard;
+						board=realBoard;
 						board(y,x)=b+1;
 //						printboard(RealBoard,board);
 						if (validBoard(board)&&!finalBoard(board)) board = dumpbruteforce(board);
@@ -174,15 +176,16 @@ Board dumpbruteforce(Board const RealBoard) {
 						//std::cout << "failed, try next number";
 					}
 				}
-				return RealBoard;
+				return realBoard;
 			}
 
 		}
 	}
-	return RealBoard;
+	return realBoard;
 }
 
-Board bruteforce(Board const board, bool smart) {
+Board bruteforce(Board const& board, bool smart) {
 	if (smart) return smartbruteforce(board);
 	else return dumpbruteforce(board);
 }
+

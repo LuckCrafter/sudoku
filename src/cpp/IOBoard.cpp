@@ -31,7 +31,7 @@ Board importBoard(std::string path) {
     return board;
 }
 
-void exportBoard(std::string path, Board board) {
+void exportBoard(std::string path, Board const& board) {
     std::ofstream output(path);
     if (!output.is_open()) {
         std::cout << "Can\'t open file\n";

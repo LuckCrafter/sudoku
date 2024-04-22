@@ -28,10 +28,11 @@
 // Regeln 1-9 Horizontale Reihe
 // Regeln 1-9 3x3 Würfel
 int main() {
-    Board board;
-    board = importBoard("./input.txt");
+    //Board board;
+    Board board = importBoard("./input.txt");
 	Board solvedboard = bruteforce(board,true);
 	printboard(board,solvedboard);
+    printnote(board,solvedboard);
     exportBoard("./output.txt", solvedboard);
 	return !finalBoard(solvedboard);
 }

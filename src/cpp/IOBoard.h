@@ -5,5 +5,5 @@
 //#include <array>
 #include "Board.h"
 
-Board importBoard(std::string);
-void exportBoard(std::string, Board);
+Board importBoard(std::string path);
+void exportBoard(std::string path, Board const& board);

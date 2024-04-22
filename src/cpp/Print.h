@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-void printboard(Board); //printboard
-void printnote(Board);  //print notes (9 boards, for every number one)
-void printboard(Board, Board);  // compare both boards and highligths diffrence
-void printnote(Board, Board); // combind the both
+void printboard(Board const& board); //printboard
+void printnote(Board const& board);  //print notes (9 boards, for every number one)
+void printboard(Board const& board, Board const& oldboard);  // compare both boards and highligths diffrence
+void printnote(Board const& board, Board const& oldboard); // combind the both

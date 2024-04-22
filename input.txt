@@ -1,4 +1,4 @@
-#Zero mark unknown fields
+#Zeros represent free fields
 600 000 004
 009 080 201
 030 009 000
